@@ -47,14 +47,16 @@ Route::get('/galery/{img}', [MainController::class, 'galery']);
 
 Route::get('/contact', function(){
     $data = [
-        'name'=>'Moscow Polytech',
+        'name'=>'Dudin Maxim Anatolyevich',
         'adres' => 'Bol. Semenovskaya',
         'phone'=>'8(495)223-2323',
-        'email'=>'main@mospolytech.ru'
+        'email'=>'maksimda200504@gmail.com',
+        'group'=>'221-323'
     ];
     return view('main.contacts', ['data'=>$data]);
 });
 
+Route::get('send', 'App\Http\Controllers\mailController@send');
 // Route::get('/', function () {
 //     return view('welcome');
 // });

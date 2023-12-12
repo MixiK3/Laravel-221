@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use App\Events\EventNewArticle;
-use App\Mail\ArticleMail;
-use App\Models\User;
-use App\Notifications\NotifyNewArticle;
-use Illuminate\Support\Facades\Notification;
+use App\Jobs\MailJob;
+use App\Events\ArticleCreateEvent;
+
 
 class ArticleController extends Controller
 {
@@ -30,7 +27,7 @@ class ArticleController extends Controller
            return Article::latest()->paginate(5);
          });
         
-        return view('article.index', ['articles'=>$article]);
+        return response('article.index', ['articles'=>$article]);
     }
 
     /**
@@ -41,7 +38,7 @@ class ArticleController extends Controller
     public function create()
     {
         Gate::authorize('create', [self::class]);
-        return view('article.create');
+        return response('article.create');
     }
 
     /**
@@ -77,7 +74,7 @@ class ArticleController extends Controller
                Cache::forget($key->key); 
             }
         };
-        return redirect()->route('article.index');
+        return response()->route('article.index');
     }
 
     /**
@@ -99,7 +96,7 @@ class ArticleController extends Controller
                             ->latest()->paginate(2);
         });
         
-        return view('article.show', ['article'=>$article, 'comments'=>$comments]);
+        return response('article.show', ['article'=>$article, 'comments'=>$comments]);
     }
 
     /**
@@ -111,7 +108,7 @@ class ArticleController extends Controller
     public function edit(Article $article)
     {
         Gate::authorize('create', [self::class]);
-        return view('article.edit', ['article'=>$article]);
+        return response('article.edit', ['article'=>$article]);
     }
 
     /**
@@ -142,7 +139,7 @@ class ArticleController extends Controller
                Cache::forget($key->key); 
             }
         }
-        return redirect()->route('article.show', ['article'=>$article]);
+        return response()->route('article.show', ['article'=>$article]);
     }
 
     /**
@@ -163,6 +160,6 @@ class ArticleController extends Controller
                Cache::forget($key->key); 
             }
         }
-        return redirect()->route('article.index');
+        return response()->route('article.index');
     }
 }

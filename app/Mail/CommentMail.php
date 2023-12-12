@@ -21,7 +21,7 @@ class CommentMail extends Mailable
      protected $text_article;
      protected $comment;
 
-    public function __construct(Comment $comment, string $text_article)
+    public function __construct(Comment $comment, $text_article)
     {
         $this->text_article = $text_article;
         $this->comment = $comment;
